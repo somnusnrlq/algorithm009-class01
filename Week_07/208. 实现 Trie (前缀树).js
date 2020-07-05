@@ -1,0 +1,95 @@
+/**
+ * Initialize your data structure here.
+ */
+var TrieNode = function () {
+    this.next = new Map();
+    this.isEnd = false;
+  }
+  
+  var Trie = function () {
+    this.root = new TrieNode();
+  };
+  
+  /**
+   * Inserts a word into the trie. 
+   * @param {string} word
+   * @return {void}
+   */
+  Trie.prototype.insert = function (word) {
+    if (word.length === 0) {
+      return;
+    }
+    let { root: node } = this;
+    for (let char of word) {
+      if (node.next.has(char) === false) {
+        node.next.set(char, new TrieNode());
+      }
+      node = node.next.get(char);
+    }
+    node.isEnd = true;
+  };
+  
+  /**
+   * Returns if the word is in the trie. 
+   * @param {string} word
+   * @return {boolean}
+   */
+  Trie.prototype.search = function (word) {
+    if (word.length === 0) {
+      return;
+    }
+    let { root: node } = this;
+    for (let char of word) {
+      if (node.next.has(char)) {
+        node = node.next.get(char);
+      } else {
+        return false;
+      }
+    }
+    return node.isEnd;
+  };
+  
+  /**
+   * Returns if there is any word in the trie that starts with the given prefix. 
+   * @param {string} prefix
+   * @return {boolean}
+   */
+  Trie.prototype.startsWith = function (prefix) {
+    if (prefix.length === 0) {
+      return;
+    }
+    let { root: node } = this;
+    for (let char of prefix) {
+      if (node.next.has(char)) {
+        node = node.next.get(char);
+      } else {
+        return false;
+      }
+    }
+    return true;
+  };
+  
+  /**
+   * Returns delete result
+   * @param {string} prefix
+   * @return {boolean}
+  */
+  Trie.prototype.delete = function (word) {
+    if (word.length === 0) {
+      return;
+    }
+    let { root: node } = this;
+    const len = word.length - 1;
+    for (let i = 0; i <= len; i++) {
+      if (node.next.has(word[i])) {
+        node = node.next.get(word[i]);
+      } else {
+        return false;
+      }
+    }
+    if (node.isEnd) {
+        node.next.delete(word[len])
+        return true;
+    }
+    return false;
+  };
